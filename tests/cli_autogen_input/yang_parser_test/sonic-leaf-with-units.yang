@@ -1,0 +1,35 @@
+module sonic-leaf-with-units {
+
+    namespace "http://github.com/Azure/leaf-with-units";
+    prefix leaf-with-units;
+
+    container sonic-leaf-with-units {
+        /* sonic-leaf-with-units - top level container */
+
+        container TABLE_1 {
+            /* TABLE_1 - table container */
+
+            description "TABLE_1 description";
+
+            container OBJECT_1 {
+                /* OBJECT_1 - object container, it have:
+                 * 2 leafs with numeric types and units
+                 */
+
+                description "OBJECT_1 description";
+
+                leaf OBJ_1_LEAF_1 {
+                    description "OBJ_1_LEAF_1 description";
+                    type uint32;
+                    units "MHz";
+                }
+
+                leaf OBJ_1_LEAF_2 {
+                    description "OBJ_1_LEAF_2 description";
+                    type int16;
+                    units "dBm";
+                }
+            }
+        }
+    }
+}

@@ -26,6 +26,7 @@ test_yang_models = [
     'sonic-grouping-complex.yang',
     'sonic-grouping-1.yang',
     'sonic-grouping-2.yang',
+    'sonic-leaf-with-units.yang',
 ]
 
 
@@ -149,6 +150,14 @@ class TestYangParser:
 
         base_test('sonic-grouping-complex',
                  assert_dictionaries.grouping_complex)
+
+    def test_leaf_with_units(self):
+        """ Test that the 'units' statement on a numeric leaf
+            is correctly parsed and included in the attr dict.
+        """
+
+        base_test('sonic-leaf-with-units',
+                 assert_dictionaries.leaf_with_units)
 
 
 def base_test(yang_model_name, correct_dict):
