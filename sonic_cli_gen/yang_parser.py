@@ -37,7 +37,8 @@ class YangParser:
                             'description': 'value',
                             'is-leaf-list': False,
                             'is-mandatory': False,
-                            'group': 'value'
+                            'group': 'value',
+                            'units': 'value'
                         }
                         ...
                     ],
@@ -393,12 +394,28 @@ def on_leaf(leaf: OrderedDict,
             'description': get_description(leaf),
             'is-leaf-list': is_leaf_list,
             'is-mandatory': get_mandatory(leaf),
-            'group': grouping_name}
+            'group': grouping_name,
+            'units': get_units(leaf)}
 
     return attr
 
 
 # ----------------------GETERS------------------------- #
+
+def get_units(y_leaf: OrderedDict) -> str:
+    """ Parse the 'units' statement for a 'leaf'
+
+        Args:
+            y_leaf: reference to a 'leaf' entity
+        Returns:
+            'leaf' 'units' value or empty string
+    """
+
+    if y_leaf.get('units') is None:
+        return ''
+
+    return y_leaf.get('units').get('@name', '')
+
 
 def get_mandatory(y_leaf: OrderedDict) -> bool:
     """ Parse the 'mandatory' statement for a 'leaf'
