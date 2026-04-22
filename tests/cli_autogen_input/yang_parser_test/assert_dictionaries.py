@@ -150,25 +150,29 @@ static_object_complex_1 = {
                         "name":"OBJ_1_LEAF_1",
                         "description": "OBJ_1_LEAF_1 description",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_LEAF_LIST_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": True
+                        "is-leaf-list": True,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_CHOICE_1_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_CHOICE_1_LEAF_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     }
                 ]
             }
@@ -191,49 +195,57 @@ static_object_complex_2 = {
                         "name":"OBJ_1_LEAF_1",
                         "description": "OBJ_1_LEAF_1 description",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_LEAF_2",
                         "description": "OBJ_1_LEAF_2 description",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_LEAF_LIST_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": True
+                        "is-leaf-list": True,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_LEAF_LIST_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": True
+                        "is-leaf-list": True,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_CHOICE_1_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_CHOICE_1_LEAF_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_CHOICE_2_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_CHOICE_2_LEAF_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                 ]
             }
@@ -256,25 +268,29 @@ dynamic_object_complex_1 = {
                         "name":"OBJ_1_LEAF_1",
                         "description": "OBJ_1_LEAF_1 description",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_LEAF_LIST_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": True
+                        "is-leaf-list": True,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_CHOICE_1_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_CHOICE_1_LEAF_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     }
                 ],
                 "keys":[
@@ -303,49 +319,57 @@ dynamic_object_complex_2 = {
                         "name":"OBJ_1_LEAF_1",
                         "description": "OBJ_1_LEAF_1 description",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_LEAF_2",
                         "description": "OBJ_1_LEAF_2 description",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_LEAF_LIST_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": True
+                        "is-leaf-list": True,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_LEAF_LIST_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": True
+                        "is-leaf-list": True,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_CHOICE_1_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_CHOICE_1_LEAF_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_CHOICE_2_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"OBJ_1_CHOICE_2_LEAF_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     }
                 ],
                 "keys":[
@@ -378,85 +402,99 @@ choice_complex = {
                         "name":"LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "GR_1_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "GR_1_LEAF_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "LEAF_LIST_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": True
+                        "is-leaf-list": True,
+                        "units": ""
                     },
                     {
                         "name":"LEAF_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"LEAF_3",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "GR_5_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "GR_5_LEAF_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "GR_2_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "GR_2_LEAF_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "GR_3_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "GR_3_LEAF_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "LEAF_LIST_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": True
+                        "is-leaf-list": True,
+                        "units": ""
                     },
                     {
                         "name": "LEAF_LIST_3",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": True
+                        "is-leaf-list": True,
+                        "units": ""
                     },
                 ]
             }
@@ -479,13 +517,15 @@ grouping_complex = {
                         "name":"GR_1_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"GR_1_LEAF_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                 ]
             },
@@ -497,73 +537,85 @@ grouping_complex = {
                         "name":"GR_5_LEAF_1",
                         "description": "GR_5_LEAF_1 refine description",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"GR_6_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name":"GR_6_LEAF_2",
                         "description": "GR_6_LEAF_2 refine description",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "GR_4_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "GR_4_LEAF_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "GR_5_LEAF_LIST_1",
                         "description": "GR_5_LEAF_LIST_1 refine description",
                         "is-mandatory": False,
-                        "is-leaf-list": True
+                        "is-leaf-list": True,
+                        "units": ""
                     },
                     {
                         "name": "GR_6_CASE_1_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "GR_6_CASE_1_LEAF_LIST_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": True
+                        "is-leaf-list": True,
+                        "units": ""
                     },
                     {
                         "name": "GR_6_CASE_2_LEAF_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "GR_6_CASE_2_LEAF_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": False
+                        "is-leaf-list": False,
+                        "units": ""
                     },
                     {
                         "name": "GR_6_CASE_2_LEAF_LIST_1",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": True
+                        "is-leaf-list": True,
+                        "units": ""
                     },
                     {
                         "name": "GR_6_CASE_2_LEAF_LIST_2",
                         "description": "",
                         "is-mandatory": False,
-                        "is-leaf-list": True
+                        "is-leaf-list": True,
+                        "units": ""
                     },
                 ]
             }
@@ -572,3 +624,33 @@ grouping_complex = {
    ]
 }
 
+leaf_with_units = {
+   "tables":[
+      {
+         "description":"TABLE_1 description",
+         "name":"TABLE_1",
+         "static-objects":[
+            {
+                "name":"OBJECT_1",
+                "description":"OBJECT_1 description",
+                "attrs":[
+                    {
+                        "name":"OBJ_1_LEAF_1",
+                        "description": "OBJ_1_LEAF_1 description",
+                        "is-mandatory": False,
+                        "is-leaf-list": False,
+                        "units": "MHz"
+                    },
+                    {
+                        "name":"OBJ_1_LEAF_2",
+                        "description": "OBJ_1_LEAF_2 description",
+                        "is-mandatory": False,
+                        "is-leaf-list": False,
+                        "units": "dBm"
+                    }
+                ]
+            }
+         ]
+      }
+   ]
+}
