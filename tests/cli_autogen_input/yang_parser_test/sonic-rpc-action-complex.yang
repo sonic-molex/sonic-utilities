@@ -1,0 +1,95 @@
+module sonic-rpc-action-complex {
+
+    yang-version 1.1;
+
+    namespace "http://github.com/Azure/sonic-rpc-action-complex";
+    prefix sonic-rpc-action-complex;
+
+    /* Module-level RPC: input with 1 leaf, output with 1 leaf + 1 leaf-list */
+    rpc GET_STATUS {
+        description "Get device status";
+        input {
+            leaf DEVICE_ID {
+                description "Device identifier";
+                type string;
+            }
+        }
+        output {
+            leaf STATUS {
+                description "Device status";
+                type string;
+            }
+            leaf-list ERROR_CODES {
+                type string;
+            }
+        }
+    }
+
+    container sonic-rpc-action-complex {
+        /* sonic-rpc-action-complex - top level container */
+
+        container TABLE_1 {
+            /* TABLE_1 - table container with a dynamic object (list) */
+
+            description "TABLE_1 description";
+
+            list TABLE_1_LIST {
+                description "TABLE_1_LIST description";
+                key "key_name";
+
+                leaf key_name {
+                    type string;
+                }
+
+                leaf ATTR_1 {
+                    description "ATTR_1 description";
+                    type string;
+                }
+
+                /* Action on a list node: input with 1 leaf, output with 1 leaf */
+                action RESET {
+                    description "Reset list entry";
+                    input {
+                        leaf RESET_MODE {
+                            type string;
+                        }
+                    }
+                    output {
+                        leaf RESULT {
+                            type string;
+                        }
+                    }
+                }
+            }
+        }
+
+        container TABLE_2 {
+            /* TABLE_2 - table container with a static object (container) */
+
+            description "TABLE_2 description";
+
+            container OBJECT_1 {
+                description "OBJECT_1 description";
+
+                leaf OBJ_1_LEAF_1 {
+                    description "OBJ_1_LEAF_1 description";
+                    type string;
+                }
+
+                /* Action on a container node: input with 1 leaf + 1 leaf-list, no output */
+                action CONFIGURE {
+                    description "Configure object action";
+                    input {
+                        leaf PARAM_1 {
+                            description "Parameter 1";
+                            type string;
+                        }
+                        leaf-list PARAM_LIST_1 {
+                            type string;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

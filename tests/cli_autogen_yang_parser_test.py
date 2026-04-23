@@ -27,6 +27,7 @@ test_yang_models = [
     'sonic-grouping-1.yang',
     'sonic-grouping-2.yang',
     'sonic-leaf-with-units.yang',
+    'sonic-rpc-action-complex.yang',
 ]
 
 
@@ -158,6 +159,16 @@ class TestYangParser:
 
         base_test('sonic-leaf-with-units',
                  assert_dictionaries.leaf_with_units)
+
+    def test_rpc_action_complex(self):
+        """ Test YANG 1.1 RPCs and actions:
+            - module-level RPC with input (1 leaf) and output (1 leaf + 1 leaf-list)
+            - action on a list node with input (1 leaf) and output (1 leaf)
+            - action on a container node with input (1 leaf + 1 leaf-list) and no output
+        """
+
+        base_test('sonic-rpc-action-complex',
+                 assert_dictionaries.rpc_action_complex)
 
 
 def base_test(yang_model_name, correct_dict):

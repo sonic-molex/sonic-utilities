@@ -134,7 +134,35 @@ class YangParser:
         self.yang_2_dict['tables'] += list_handler(self.y_table_containers,
                 lambda e: on_table_container(self.y_module, e, self.conf_mgmt))
 
+        self.yang_2_dict['rpcs'] = self._parse_rpcs()
+        self.yang_2_dict['has_rpc_or_action'] = self._has_rpc_or_action()
+
         return self.yang_2_dict
+
+    def _has_rpc_or_action(self) -> bool:
+        """ Check if any RPCs or actions exist in parsed YANG model. """
+
+        if self.yang_2_dict.get('rpcs'):
+            return True
+        for table in self.yang_2_dict.get('tables', []):
+            if table.get('actions'):
+                return True
+            for obj in table.get('dynamic-objects', []) + table.get('static-objects', []):
+                if obj.get('actions'):
+                    return True
+        return False
+
+    def _parse_rpcs(self) -> list:
+        """ Parse all 'rpc' elements from the YANG module.
+
+            Returns:
+                list of parsed RPC elements
+        """
+        y_rpc = self.y_module.get('rpc')
+        if y_rpc is None:
+            return []
+        return list_handler(y_rpc,
+                lambda r: on_rpc(self.y_module, r, self.conf_mgmt))
 
 
 # ------------------------------HANDLERS-------------------------------- #
@@ -195,6 +223,9 @@ def on_table_container(y_module: OrderedDict,
         # move 'keys' elements from 'attrs' to 'keys'
         change_dyn_obj_struct(y2d_elem['dynamic-objects'])
 
+    # Parse container-level actions (YANG 1.1)
+    y2d_elem['actions'] = get_actions(y_module, tbl_container, conf_mgmt)
+
     return y2d_elem
 
 
@@ -240,6 +271,9 @@ def on_object_entity(y_module: OrderedDict,
     attrs_list.extend(get_choices(y_module, y_entity, conf_mgmt))
 
     obj_elem['attrs'] = attrs_list
+
+    # Parse actions (YANG 1.1)
+    obj_elem['actions'] = get_actions(y_module, y_entity, conf_mgmt)
 
     return obj_elem
 
@@ -488,4 +522,84 @@ def change_dyn_obj_struct(dynamic_objects: list):
                     key['description'] = attr.get('description')
                     obj['attrs'].remove(attr)
                     break
+
+
+# ----------------------RPC HANDLERS------------------------ #
+
+def on_rpc(y_module: OrderedDict,
+           y_rpc: OrderedDict,
+           conf_mgmt: ConfigMgmt) -> dict:
+    """ Parse a single 'rpc' element.
+
+        The RPC 'input'/'output' blocks are anonymous containers in YANG, so
+        their leafs/leaf-lists/uses/choices are parsed with the same helpers
+        used for regular table objects.
+    """
+
+    def collect(block):
+        if block is None:
+            return []
+        attrs = list()
+        attrs.extend(get_leafs(block))
+        attrs.extend(get_leaf_lists(block))
+        attrs.extend(get_choices(y_module, block, conf_mgmt))
+        return attrs
+
+    return {
+        'name':        y_rpc.get('@name'),
+        'description': get_description(y_rpc),
+        'input':       collect(y_rpc.get('input')),
+        'output':      collect(y_rpc.get('output')),
+        'has_output':  y_rpc.get('output') is not None,
+    }
+
+
+# --------------------ACTION HANDLERS---------------------- #
+
+def on_action(y_module: OrderedDict,
+              y_action: OrderedDict,
+              conf_mgmt: ConfigMgmt) -> dict:
+    """ Parse a single 'action' element (YANG 1.1).
+
+        Actions are similar to RPCs but defined inside data nodes
+        (list or container). Input and output are both optional.
+    """
+
+    def collect(block):
+        if block is None:
+            return []
+        attrs = list()
+        attrs.extend(get_leafs(block))
+        attrs.extend(get_leaf_lists(block))
+        attrs.extend(get_choices(y_module, block, conf_mgmt))
+        return attrs
+
+    return {
+        'name':        y_action.get('@name'),
+        'description': get_description(y_action),
+        'input':       collect(y_action.get('input')),
+        'output':      collect(y_action.get('output')),
+        'has_input':   y_action.get('input') is not None,
+        'has_output':  y_action.get('output') is not None,
+    }
+
+
+def get_actions(y_module: OrderedDict,
+                y_entity: OrderedDict,
+                conf_mgmt: ConfigMgmt) -> list:
+    """ Check if YANG entity has 'action' elements, if so parse them.
+
+        Args:
+            y_module: reference to 'module'
+            y_entity: reference to YANG 'container' or 'list'
+            conf_mgmt: reference to ConfigMgmt class instance
+        Returns:
+            list of parsed action elements
+    """
+
+    y_actions = y_entity.get('action')
+    if y_actions is None:
+        return []
+    return list_handler(y_actions,
+            lambda a: on_action(y_module, a, conf_mgmt))
 

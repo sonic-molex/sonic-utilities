@@ -14,7 +14,10 @@ import click
 import utilities_common.cli as clicommon
 import utilities_common.general as general
 from config import config_mgmt
-
+{% if has_rpc_or_action %}
+import tabulate
+from swsscommon.swsscommon import DBConnector, FieldValuePairs, NotificationProducer, NotificationConsumer, Select
+{% endif %}
 
 # Load sonic-cfggen from source since /usr/local/bin/sonic-cfggen does not have .py extension.
 sonic_cfggen = general.load_module_from_source('sonic_cfggen', '/usr/local/bin/sonic-cfggen')
@@ -411,6 +414,7 @@ E.g:
 {% endfor %}
 
 {{ gen_cfg_obj_list_update_all(table.name + "_" + object.name, table, object) }}
+{{ gen_cfg_run(table.name + "_" + object.name, table, [], object.actions | default([]), []) }}
 {% endmacro %}
 
 {# Dynamic objects config CLI generation #}
@@ -527,6 +531,92 @@ def {{ group }}():
 {{ gen_cfg_dyn_obj_update(group, table, object) }}
 {{ gen_cfg_dyn_obj_delete(group, table, object) }}
 {{ gen_cfg_obj_list_update_all(group, table, object) }}
+{{ gen_cfg_run(group, table, [], object.actions | default([]), object["keys"]) }}
+{% endmacro %}
+
+
+{# Generate a single rpc/action command.
+   op_group: click group this command belongs to
+   table: table dict (used for notification channel names)
+   op: operation dict with name, description, input (list), output (list), has_output (bool)
+   keys: list of key dicts from parent list (empty for rpc / container-level actions)
+         When empty and input exists, heuristically picks one input leaf as
+         the positional key argument (first leaf named 'name', else the first leaf).
+#}
+{% macro gen_cfg_operation(op_group, table, op, keys) %}
+{%- set op_input = op.input | default([]) -%}
+@{{ op_group }}.command(name="{{ cli_name(op.name) }}")
+{%- if keys %}
+{{ gen_click_arguments(keys) }}
+{%- endif %}
+{%- for leaf in op_input %}
+@click.option(
+    "--{{ cli_name(leaf.name) }}",
+    required=True,
+    help="""{{ leaf.description }}""",
+)
+{%- endfor %}
+def {{ op_group }}_{{ op.name | replace("-", "_") }}({% if keys %}{{ pythonize(keys) }}{% endif %}{% for leaf in op_input %}{% if keys or not loop.first %}, {% endif %}{{ leaf.name | replace("-", "_") }}{% endfor %}):
+    """{{ op.description }}"""
+    _fvps = []
+{%- for leaf in op_input %}
+    _fvps.append(("{{ leaf.name }}", str({{ leaf.name | replace("-", "_") }})))
+{%- endfor %}
+    {%- set _ch = table.name | upper | replace('-', '_') %}
+    _channel = "{{ _ch }}_NOTIFICATION"
+    _reply   = "{{ _ch }}_REPLY"
+    _db = DBConnector("APPL_DB", 0)
+{%- if op.has_output | default(false) %}
+    _cons = NotificationConsumer(_db, _reply)
+    _sel  = Select()
+    _sel.addSelectable(_cons)
+{%- endif %}
+    _pub = NotificationProducer(_db, _channel)
+{%- if keys | length == 1 %}
+    _pub.send("{{ op.name }}", {{ pythonize(keys) }}, FieldValuePairs(_fvps))
+{%- elif keys | length > 1 %}
+    _pub.send("{{ op.name }}", "|".join([{{ pythonize(keys) }}]), FieldValuePairs(_fvps))
+{%- else %}
+    _pub.send("{{ op.name }}", "", FieldValuePairs(_fvps))
+{%- endif %}
+{%- if op.has_output | default(false) %}
+    _state, _ = _sel.select(10000)
+    if _state != Select.OBJECT:
+        click.secho("Error: timeout", fg="red", err=True)
+        return
+    _op, _data, _values = _cons.pop()
+    _result = dict(_values)
+    _result["status"] = _op
+    _rows = [[k, v] for k, v in _result.items()]
+    click.echo(tabulate.tabulate(_rows, tablefmt="plain"))
+{%- else %}
+    click.echo("OK")
+{%- endif %}
+{% endmacro %}
+
+
+{# Generate a unified "run" subgroup for all operations (rpcs and actions).
+   group:       parent click group name
+   table:       table dict
+   rpc_ops:     list of rpc operation dicts (no parent keys)
+   action_ops:  list of action operation dicts
+   action_keys: list of key dicts for actions (empty for container-level)
+#}
+{% macro gen_cfg_run(group, table, rpc_ops, action_ops, action_keys) %}
+{%- if rpc_ops or action_ops %}
+@{{ group }}.group(name="run",
+                   cls=clicommon.AliasedGroup)
+def {{ group }}_run():
+    """Run an operation in {{ table.name }}."""
+    pass
+
+{% for op in rpc_ops %}
+{{ gen_cfg_operation(group + "_run", table, op, []) }}
+{% endfor %}
+{% for op in action_ops %}
+{{ gen_cfg_operation(group + "_run", table, op, action_keys) }}
+{% endfor %}
+{%- endif %}
 {% endmacro %}
 
 
@@ -550,6 +640,9 @@ def {{ table.name }}():
 {{ gen_cfg_dyn_obj(table, object) }}
 {% endfor %}
 {% endif %}
+
+{%- set _table_rpcs = rpcs if loop.first else [] %}
+{{ gen_cfg_run(table.name, table, _table_rpcs, table.actions | default([]), []) }}
 
 {% endif %}
 {% endfor %}
