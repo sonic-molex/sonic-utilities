@@ -272,6 +272,7 @@ setup(
         'lazy-object-proxy',
         'six>=1.16.0',
         'scp==0.14.5',
+        'jsonschema==2.6.0',
     ] + sonic_dependencies,
     setup_requires= [
         'pytest-runner',
