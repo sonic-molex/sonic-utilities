@@ -38,6 +38,15 @@ DEFAULT_NAMESPACE = ''
 log = logger.Logger(SYSLOG_IDENTIFIER)
 
 
+def read_device_json(path):
+    """Load a json file shipped in the device folder, {} when it is absent."""
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except (IOError, OSError, ValueError):
+        return {}
+
+
 class DBMigrator():
     def __init__(self, namespace, socket=None):
         """
@@ -966,6 +975,61 @@ class DBMigrator():
                 log.log_info(f"Migrating STATE_DB {state_db_key}, ecn mode: {ecn_mode} -> copy_from_outer")
                 self.stateDB.set(self.stateDB.STATE_DB, state_db_key, 'ecn_mode', 'copy_from_outer')
 
+    def migrate_otn_config(self):
+        """Backfill the optical defaults an OTN platform ships with.
+
+        A first boot gets these from the 'otn' sonic-cfggen preset. On an
+        image upgrade the config comes from the previous image instead, so it
+        can predate an optical table or row that the new image introduces.
+        The defaults are read from the same device files the preset uses:
+
+            <platform>/otn_metadata.json        DEVICE_METADATA of the platform
+            <platform>/<hwsku>/otn_config.json  OTN_* tables of the hwsku
+
+        Platform metadata wins: it describes the hardware, not a user choice.
+        Optical rows are only added when missing, so configured values survive
+        the upgrade. A platform without otn_config.json is left untouched.
+        """
+        try:
+            platform_dir = device_info.get_path_to_platform_dir()
+        except Exception as e:
+            # Never let this abort the migration of an unrelated platform.
+            log.log_warning('Skipping OTN config migration: ' + str(e))
+            return
+
+        otn_config = read_device_json(
+            os.path.join(platform_dir, str(self.hwsku), 'otn_config.json'))
+        if not otn_config:
+            return
+
+        log.log_notice('Migrate OTN optical defaults')
+
+        metadata = read_device_json(os.path.join(platform_dir, 'otn_metadata.json'))
+        localhost = metadata.get('DEVICE_METADATA', {}).get('localhost', {})
+        if localhost:
+            entry = self.configDB.get_entry('DEVICE_METADATA', 'localhost')
+            if any(entry.get(k) != v for k, v in localhost.items()):
+                entry.update(localhost)
+                self.configDB.set_entry('DEVICE_METADATA', 'localhost', entry)
+                log.log_info('Migrate OTN DEVICE_METADATA: {}'.format(localhost))
+
+        for table, rows in otn_config.items():
+            # get_table() splits composite keys such as "OCM0-0|191262500|191412500"
+            # into tuples, so join them back before comparing with otn_config.json.
+            existing = set()
+            for key in self.configDB.get_table(table):
+                if not isinstance(key, str):
+                    key = self.configDB.KEY_SEPARATOR.join(key)
+                existing.add(key)
+
+            added = 0
+            for key, row in rows.items():
+                if key not in existing:
+                    self.configDB.set_entry(table, key, row)
+                    added += 1
+            if added:
+                log.log_info('Migrate OTN {}: added {} entries'.format(table, added))
+
     def version_unknown(self):
         """
         version_unknown tracks all SONiC versions that doesn't have a version
@@ -1491,6 +1555,9 @@ class DBMigrator():
 
         self.migrate_tacplus()
         self.migrate_aaa()
+
+        # Backfill optical defaults on OTN platforms; a no-op everywhere else.
+        self.migrate_otn_config()
 
     def migrate(self):
         version = self.get_version()
